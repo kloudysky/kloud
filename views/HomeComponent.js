@@ -13,13 +13,18 @@ import CustomListItem from "../components/CustomListItem";
 import { auth, db } from "../firebase";
 
 const HomeComponent = ({ navigation }) => {
+  const signOutUser = () => {
+    auth.signOut().then(() => {
+      navigation.replace("Login");
+    });
+  };
   useLayoutEffect(() => {
     navigation.setOptions({
       title: "Kloud",
       headerTintColor: "black",
       headerLeft: () => {
         <View style={{ marginLeft: 20 }}>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={signOutUser} activeOpacity={0.5}>
             <Avatar rounded source={{ uri: auth?.currentUser?.avatar }} />
           </TouchableOpacity>
         </View>;

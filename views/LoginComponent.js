@@ -18,7 +18,11 @@ const LoginComponent = ({ navigation }) => {
     return unsubscribe;
   }, []);
 
-  const signIn = () => {};
+  const signIn = () => {
+    auth
+      .signInWithEmailAndPassword(email, password)
+      .catch((error) => alert(error));
+  };
 
   return (
     <KeyboardAvoidingView bahavior="padding" style={styles.container}>
@@ -34,12 +38,12 @@ const LoginComponent = ({ navigation }) => {
         />
         <Input
           style={styles.input}
-          //inputStyle={{ color: "white" }}
           placeholder="Password"
           secureTextEntry
           type="password"
           value={password}
           onChangeText={(text) => setPassword(text)}
+          onSubmitEditing={signIn}
         />
       </View>
       <Button containerStyle={styles.button} onPress={signIn} title="Login" />

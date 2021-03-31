@@ -19,6 +19,8 @@ const RegisterComponent = ({ navigation }) => {
       .then((authUser) => {
         authUser.user.updateProfile({
           nickname: nickname,
+          avatar:
+            "https://cdn1.iconfinder.com/data/icons/hawcons/32/699966-icon-1-cloud-512.png",
         });
       })
       .catch((error) => alert(error.message));
@@ -56,6 +58,7 @@ const RegisterComponent = ({ navigation }) => {
           type="password"
           value={password}
           onChangeText={(text) => setPassword(text)}
+          onSubmitEditing={register}
         />
       </View>
       <Button

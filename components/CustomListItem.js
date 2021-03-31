@@ -13,7 +13,7 @@ const CustomListItem = ({ id, chatName, enterChat }) => {
         }}
       />
       <ListItem.Content>
-        <ListItem.Title style={{ fontWeight: "900 " }}>
+        <ListItem.Title style={{ fontWeight: "900" }}>
           Kloud Chat
         </ListItem.Title>
         <ListItem.Subtitle numberOfLines={1} ellipsizeMode="tail">
