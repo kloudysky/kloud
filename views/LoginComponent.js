@@ -27,6 +27,13 @@ const LoginComponent = ({ navigation }) => {
   return (
     <KeyboardAvoidingView bahavior="padding" style={styles.container}>
       <StatusBar style="light" />
+      <Image
+        source={{
+          uri:
+            "https://cdn1.iconfinder.com/data/icons/hawcons/32/699966-icon-1-cloud-512.png",
+        }}
+        style={{ width: 200, height: 200 }}
+      />
       <View style={styles.inputContainer}>
         <Input
           style={styles.input}

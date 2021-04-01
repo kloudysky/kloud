@@ -1,4 +1,4 @@
-import React, { useLayoutEffect } from "react";
+import React, { useLayoutEffect, useEffect, useState } from "react";
 import {
   SafeAreaView,
   ScrollView,
@@ -9,34 +9,88 @@ import {
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { Avatar } from "react-native-elements";
+import { AntDesign, SimpleLineIcons } from "@expo/vector-icons";
 import CustomListItem from "../components/CustomListItem";
 import { auth, db } from "../firebase";
 
 const HomeComponent = ({ navigation }) => {
+  const [chats, setChats] = useState([]);
+
   const signOutUser = () => {
     auth.signOut().then(() => {
       navigation.replace("Login");
     });
   };
+
+  useEffect(() => {
+    const unsubscribe = db.collection("chats").onSnapshot((snapshot) =>
+      setChats(
+        snapshot.docs.map((doc) => ({
+          id: doc.id,
+          data: doc.data(),
+        }))
+      )
+    );
+
+    return unsubscribe;
+  }, []);
+
   useLayoutEffect(() => {
     navigation.setOptions({
       title: "Kloud",
       headerTintColor: "black",
-      headerLeft: () => {
+      headerLeft: () => (
         <View style={{ marginLeft: 20 }}>
           <TouchableOpacity onPress={signOutUser} activeOpacity={0.5}>
-            <Avatar rounded source={{ uri: auth?.currentUser?.avatar }} />
+            <Avatar
+              rounded
+              source={{ uri: `${auth?.currentUser?.photoURL}` }}
+            />
           </TouchableOpacity>
-        </View>;
-      },
+        </View>
+      ),
+      headerRight: () => (
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            width: 80,
+            marginRight: 20,
+          }}
+        >
+          <TouchableOpacity activeOpacity={0.5}>
+            <AntDesign name="camerao" size={24} color="white" />
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => navigation.navigate("AddChat")}
+            activeOpacity={0.5}
+          >
+            <SimpleLineIcons name="pencil" size={24} color="white" />
+          </TouchableOpacity>
+        </View>
+      ),
     });
   }, []);
 
+  const enterChat = (id, chatName) => {
+    navigation.navigate("Chat", {
+      id,
+      chatName,
+    });
+  };
+
   return (
-    <SafeAreaView>
+    <SafeAreaView style={styles.container}>
       <StatusBar style="light" />
       <ScrollView>
-        <CustomListItem />
+        {chats.map(({ id, data: { chatName } }) => (
+          <CustomListItem
+            key={id}
+            id={id}
+            chatName={chatName}
+            enterChat={enterChat}
+          />
+        ))}
       </ScrollView>
     </SafeAreaView>
   );
@@ -44,4 +98,9 @@ const HomeComponent = ({ navigation }) => {
 
 export default HomeComponent;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: "#23272a",
+    height: "100%",
+  },
+});
